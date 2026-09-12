@@ -3,7 +3,7 @@ import React from 'react'
 import type { MapBlock as MapBlockProps } from '@/payload-types'
 import type { Locale } from '@/i18n/config'
 
-import { getDictionary } from '@/i18n/dictionaries'
+import { getTranslate } from '@/i18n/getI18n'
 import { cn } from '@/utilities/ui'
 
 import { MapCanvas } from './MapCanvas'
@@ -29,7 +29,7 @@ const DetailRow: React.FC<{
   </div>
 )
 
-export const MapBlockComponent: React.FC<Props> = ({
+export const MapBlockComponent = async ({
   heading,
   latitude,
   longitude,
@@ -42,8 +42,8 @@ export const MapBlockComponent: React.FC<Props> = ({
   hours,
   showDirections,
   locale = 'en',
-}) => {
-  const t = getDictionary(locale)
+}: Props) => {
+  const t = await getTranslate(locale)
 
   // Coordinates are required by the block config, but a draft saved before the
   // field existed can still reach here with nothing set.
@@ -68,13 +68,13 @@ export const MapBlockComponent: React.FC<Props> = ({
           <div className="flex flex-col justify-between gap-8 bg-card p-6 md:p-8">
             <dl className="flex flex-col gap-6">
               {address ? (
-                <DetailRow label={t.contact.address}>
+                <DetailRow label={t('prodeprod:contact:address')}>
                   <address className="whitespace-pre-line not-italic">{address}</address>
                 </DetailRow>
               ) : null}
 
               {phone ? (
-                <DetailRow label={t.contact.phone}>
+                <DetailRow label={t('prodeprod:contact:phone')}>
                   <a className="hover:text-primary" href={`tel:${phone.replace(/\s+/g, '')}`}>
                     {phone}
                   </a>
@@ -82,7 +82,7 @@ export const MapBlockComponent: React.FC<Props> = ({
               ) : null}
 
               {email ? (
-                <DetailRow label={t.contact.email}>
+                <DetailRow label={t('prodeprod:contact:email')}>
                   <a className="break-all hover:text-primary" href={`mailto:${email}`}>
                     {email}
                   </a>
@@ -90,7 +90,7 @@ export const MapBlockComponent: React.FC<Props> = ({
               ) : null}
 
               {hours ? (
-                <DetailRow label={t.contact.hours}>
+                <DetailRow label={t('prodeprod:contact:hours')}>
                   <span className="whitespace-pre-line">{hours}</span>
                 </DetailRow>
               ) : null}
@@ -103,7 +103,7 @@ export const MapBlockComponent: React.FC<Props> = ({
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                {t.map.directions}
+                {t('prodeprod:map:directions')}
               </a>
             )}
           </div>
@@ -117,7 +117,7 @@ export const MapBlockComponent: React.FC<Props> = ({
         */}
         <div className={cn('map-canvas relative w-full', HEIGHTS[height ?? 'medium'])}>
           <MapCanvas
-            ariaLabel={heading || t.map.title}
+            ariaLabel={heading || t('prodeprod:map:title')}
             latitude={latitude}
             longitude={longitude}
             markerLabel={markerLabel}

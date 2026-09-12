@@ -3,7 +3,6 @@ import type { FormFieldBlock, Form as FormType } from '@payloadcms/plugin-form-b
 
 import type { Locale } from '@/i18n/config'
 import { defaultLocale } from '@/i18n/config'
-import { getDictionary } from '@/i18n/dictionaries'
 
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useState } from 'react'
@@ -23,9 +22,15 @@ export type FormBlockType = {
   introContent?: DefaultTypedEditorState
 }
 
+export type FormLabels = {
+  submitting: string
+  error: string
+}
+
 export const FormBlock: React.FC<
   {
     id?: string
+    labels?: FormLabels
     locale?: Locale
   } & FormBlockType
 > = (props) => {
@@ -34,10 +39,9 @@ export const FormBlock: React.FC<
     form: formFromProps,
     form: { id: formID, confirmationMessage, confirmationType, redirect, submitButtonLabel } = {},
     introContent,
+    labels,
     locale = defaultLocale,
   } = props
-
-  const t = getDictionary(locale)
 
   const formMethods = useForm({
     defaultValues: formFromProps.fields,
@@ -133,7 +137,7 @@ export const FormBlock: React.FC<
           )}
           {isLoading && !hasSubmitted && (
             <p aria-live="polite" className="text-muted-foreground">
-              {t.form.submitting}
+              {labels?.submitting}
             </p>
           )}
           {error && (
@@ -141,7 +145,7 @@ export const FormBlock: React.FC<
               className="mb-6 rounded-md bg-error px-4 py-3 text-sm text-error-foreground"
               role="alert"
             >
-              {error.message || t.form.error}
+              {error.message || labels?.error}
             </div>
           )}
           {!hasSubmitted && (

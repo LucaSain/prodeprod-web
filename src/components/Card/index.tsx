@@ -9,7 +9,6 @@ import type { Locale } from '@/i18n/config'
 
 import { Media } from '@/components/Media'
 import { defaultLocale, localizePath } from '@/i18n/config'
-import { getDictionary } from '@/i18n/dictionaries'
 
 export type CardPostData = Pick<Post, 'slug' | 'categories' | 'meta' | 'title'>
 
@@ -25,6 +24,7 @@ export const Card: React.FC<{
   doc?: CardPostData
   locale?: Locale
   relationTo?: 'posts'
+  noImageLabel?: string
   showCategories?: boolean
   title?: string
 }> = (props) => {
@@ -33,6 +33,7 @@ export const Card: React.FC<{
     className,
     doc,
     locale = defaultLocale,
+    noImageLabel,
     relationTo,
     showCategories,
     title: titleFromProps,
@@ -40,7 +41,6 @@ export const Card: React.FC<{
 
   const { slug, categories, meta, title } = doc || {}
   const { description, image: metaImage } = meta || {}
-  const t = getDictionary(locale)
 
   const hasCategories = categories && Array.isArray(categories) && categories.length > 0
   const titleToUse = titleFromProps || title
@@ -50,9 +50,9 @@ export const Card: React.FC<{
   return (
     <article className={cn('group flex flex-col', className)} ref={card.ref}>
       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-muted">
-        {!metaImage && (
+        {!metaImage && noImageLabel && (
           <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-            {t.common.noImage}
+            {noImageLabel}
           </div>
         )}
         {metaImage && typeof metaImage !== 'string' && (

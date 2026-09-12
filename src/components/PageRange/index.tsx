@@ -3,17 +3,22 @@ import React from 'react'
 import type { Locale } from '@/i18n/config'
 
 import { defaultLocale } from '@/i18n/config'
-import { getDictionary } from '@/i18n/dictionaries'
+import { getTranslate } from '@/i18n/getI18n'
 
-export const PageRange: React.FC<{
+export const PageRange = async ({
+  className,
+  currentPage,
+  limit,
+  locale = defaultLocale,
+  totalDocs,
+}: {
   className?: string
   currentPage?: number
   limit?: number
   locale?: Locale
   totalDocs?: number
-}> = (props) => {
-  const { className, currentPage, limit, locale = defaultLocale, totalDocs } = props
-  const t = getDictionary(locale)
+}) => {
+  const t = await getTranslate(locale)
 
   let indexStart = (currentPage ? currentPage - 1 : 1) * (limit || 1) + 1
   if (totalDocs && indexStart > totalDocs) indexStart = 0
@@ -22,17 +27,15 @@ export const PageRange: React.FC<{
   if (totalDocs && indexEnd > totalDocs) indexEnd = totalDocs
 
   const isEmpty = typeof totalDocs === 'undefined' || totalDocs === 0
-  const label = totalDocs && totalDocs > 1 ? t.posts.plural : t.posts.singular
 
   return (
     <div className={[className, 'text-sm text-muted-foreground'].filter(Boolean).join(' ')}>
       {isEmpty
-        ? t.posts.noResults
-        : t.posts.showing({
+        ? t('prodeprod:posts:noResults')
+        : t('prodeprod:posts:showing', {
             start: indexStart,
             end: indexEnd,
-            total: totalDocs as number,
-            label,
+            total: totalDocs,
           })}
     </div>
   )

@@ -17,6 +17,7 @@ import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 import { defaultLocale, localeLabels, locales } from './i18n/config'
+import { customTranslations } from './i18n/translations'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -64,6 +65,15 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
+    /*
+     * This project tracks schema in `src/migrations`, so dev must not push
+     * schema changes straight to the database. With push on, dev drifts
+     * silently from the migrations and the next `migrate` fails on an
+     * already-applied change.
+     *
+     * Workflow: change the config, `payload migrate:create`, `payload migrate`.
+     */
+    push: false,
   }),
   collections: [Pages, Posts, Media, Categories, Users],
   // Content localization. Locales come from `src/i18n/config.ts` so the
@@ -78,9 +88,18 @@ export default buildConfig({
     // rendering empty, so a half-translated page is still a usable page.
     fallback: true,
   },
-  // Russian admin panel for editors working in that locale.
+  /*
+   * Payload i18n — the viewer's language, for the admin panel and for every
+   * string the frontend renders itself.
+   *
+   * `translations` merges this project's own namespace into Payload's, so
+   * `t('prodeprod:…')` resolves the same way in the admin panel, in `req.t`,
+   * and on the frontend via `getTranslate()`.
+   */
   i18n: {
+    fallbackLanguage: defaultLocale,
     supportedLanguages: { en, ru },
+    translations: customTranslations,
   },
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],

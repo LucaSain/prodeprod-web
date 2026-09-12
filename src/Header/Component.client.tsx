@@ -7,9 +7,9 @@ import { Menu, X } from 'lucide-react'
 
 import type { Header } from '@/payload-types'
 import type { Locale } from '@/i18n/config'
+import type { HeaderLabels } from './Component'
 
 import { Logo } from '@/components/Logo/Logo'
-import { getDictionary } from '@/i18n/dictionaries'
 import { localizePath } from '@/i18n/config'
 import { cn } from '@/utilities/ui'
 import { SITE_NAME } from '@/utilities/siteConfig'
@@ -18,13 +18,13 @@ import { LocaleSwitcher } from './LocaleSwitcher'
 
 interface HeaderClientProps {
   data: Header
+  labels: HeaderLabels
   locale: Locale
 }
 
-export const HeaderClient: React.FC<HeaderClientProps> = ({ data, locale }) => {
+export const HeaderClient: React.FC<HeaderClientProps> = ({ data, labels, locale }) => {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
-  const t = getDictionary(locale)
 
   // Close the mobile drawer on navigation — the route changes underneath an
   // open overlay otherwise.
@@ -38,19 +38,19 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, locale }) => {
       data-surface="steel"
     >
       <div className="container flex items-center justify-between gap-6 py-4">
-        <Link aria-label={`${SITE_NAME} — home`} href={localizePath('/', locale)}>
+        <Link aria-label={`${SITE_NAME} — ${labels.home}`} href={localizePath('/', locale)}>
           <Logo className="text-steel-foreground" loading="eager" priority="high" />
         </Link>
 
         <div className="hidden items-center gap-8 lg:flex">
           <HeaderNav data={data} locale={locale} />
-          <LocaleSwitcher locale={locale} />
+          <LocaleSwitcher label={labels.languageSwitcher} locale={locale} />
         </div>
 
         <button
           aria-controls="mobile-nav"
           aria-expanded={open}
-          aria-label={open ? t.nav.closeMenu : t.nav.openMenu}
+          aria-label={open ? labels.closeMenu : labels.openMenu}
           className="inline-flex items-center justify-center p-2 text-steel-foreground lg:hidden"
           onClick={() => setOpen((v) => !v)}
           type="button"
@@ -69,7 +69,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, locale }) => {
         <div className="container flex flex-col gap-1 py-4">
           <HeaderNav data={data} locale={locale} stacked />
           <div className="mt-4 border-t border-steel-border/60 pt-4">
-            <LocaleSwitcher locale={locale} />
+            <LocaleSwitcher label={labels.languageSwitcher} locale={locale} />
           </div>
         </div>
       </div>

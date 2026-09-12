@@ -8,7 +8,7 @@ import { getPayload } from 'payload'
 import React from 'react'
 
 import { defaultLocale, isLocale, locales, type Locale } from '@/i18n/config'
-import { getDictionary } from '@/i18n/dictionaries'
+import { getTranslate } from '@/i18n/getI18n'
 import { titleSuffix } from '@/utilities/siteConfig'
 
 export const dynamic = 'force-static'
@@ -25,7 +25,7 @@ type Args = {
 export default async function Page({ params }: Args) {
   const { locale: localeParam } = await params
   const locale = (isLocale(localeParam) ? localeParam : defaultLocale) as Locale
-  const t = getDictionary(locale)
+  const t = await getTranslate(locale)
 
   const payload = await getPayload({ config: configPromise })
 
@@ -46,7 +46,7 @@ export default async function Page({ params }: Args) {
   return (
     <div className="pt-24 pb-24">
       <div className="container mb-12">
-        <h1 className="text-4xl font-semibold md:text-5xl">{t.posts.title}</h1>
+        <h1 className="text-4xl font-semibold md:text-5xl">{t('prodeprod:posts:title')}</h1>
       </div>
 
       <div className="container mb-8">
@@ -62,7 +62,15 @@ export default async function Page({ params }: Args) {
 
       <div className="container">
         {posts.totalPages > 1 && posts.page && (
-          <Pagination locale={locale} page={posts.page} totalPages={posts.totalPages} />
+          <Pagination
+            labels={{
+              previous: t('prodeprod:pagination:previous'),
+              next: t('prodeprod:pagination:next'),
+            }}
+            locale={locale}
+            page={posts.page}
+            totalPages={posts.totalPages}
+          />
         )}
       </div>
     </div>
@@ -74,6 +82,6 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const locale = (isLocale(localeParam) ? localeParam : defaultLocale) as Locale
 
   return {
-    title: titleSuffix(getDictionary(locale).posts.title),
+    title: titleSuffix((await getTranslate(locale))('prodeprod:posts:title')),
   }
 }

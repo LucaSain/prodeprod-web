@@ -11,8 +11,19 @@ export type Locale = (typeof locales)[number]
 
 export const defaultLocale: Locale = 'en'
 
-/** Labels shown in the language switcher, each in its own language. */
-export const localeLabels: Record<Locale, string> = {
+/**
+ * Locale labels for the admin panel's locale selector.
+ *
+ * Payload accepts a label per i18n language, so the selector reads in
+ * whichever language the editor has the admin panel set to.
+ */
+export const localeLabels: Record<Locale, Record<Locale, string>> = {
+  en: { en: 'English', ru: 'Английский' },
+  ru: { en: 'Russian', ru: 'Русский' },
+}
+
+/** Endonyms, for the public language switcher. */
+export const localeEndonyms: Record<Locale, string> = {
   en: 'English',
   ru: 'Русский',
 }

@@ -7,7 +7,6 @@ import { usePathname } from 'next/navigation'
 import type { Locale } from '@/i18n/config'
 
 import { delocalizePath, localeShortLabels, localizePath, locales } from '@/i18n/config'
-import { getDictionary } from '@/i18n/dictionaries'
 import { cn } from '@/utilities/ui'
 
 /**
@@ -18,17 +17,12 @@ import { cn } from '@/utilities/ui'
  * locale is unprefixed because the proxy rewrites it — so the path is stripped
  * of any prefix before being re-localized.
  */
-export const LocaleSwitcher: React.FC<{ locale: Locale }> = ({ locale }) => {
+export const LocaleSwitcher: React.FC<{ label: string; locale: Locale }> = ({ label, locale }) => {
   const pathname = usePathname()
-  const t = getDictionary(locale)
   const { pathname: bare } = delocalizePath(pathname || '/')
 
   return (
-    <div
-      aria-label={t.nav.languageSwitcher}
-      className="flex items-center gap-1 rounded-md bg-white/8 p-0.5"
-      role="group"
-    >
+    <div aria-label={label} className="flex items-center gap-1 rounded-md bg-white/8 p-0.5" role="group">
       {locales.map((code) => {
         const isActive = code === locale
 

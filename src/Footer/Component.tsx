@@ -8,14 +8,14 @@ import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
 import { localizePath } from '@/i18n/config'
 import { SITE_NAME } from '@/utilities/siteConfig'
-import { getDictionary } from '@/i18n/dictionaries'
+import { getTranslate } from '@/i18n/getI18n'
 
 export async function Footer({ locale }: { locale: Locale }) {
   const footerData = await getCachedGlobal('footer', 1, locale)()
 
   const navItems = footerData?.navItems || []
   const contact = footerData?.contact
-  const t = getDictionary(locale)
+  const t = await getTranslate(locale)
   const year = new Date().getFullYear()
 
   return (

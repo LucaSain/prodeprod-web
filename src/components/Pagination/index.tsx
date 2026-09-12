@@ -15,18 +15,22 @@ import React from 'react'
 import type { Locale } from '@/i18n/config'
 
 import { defaultLocale, localizePath } from '@/i18n/config'
-import { getDictionary } from '@/i18n/dictionaries'
+
+export type PaginationLabels = {
+  previous: string
+  next: string
+}
 
 export const Pagination: React.FC<{
   className?: string
+  labels: PaginationLabels
   locale?: Locale
   page: number
   totalPages: number
 }> = (props) => {
   const router = useRouter()
 
-  const { className, locale = defaultLocale, page, totalPages } = props
-  const t = getDictionary(locale)
+  const { className, labels, locale = defaultLocale, page, totalPages } = props
   const goToPage = (n: number) => router.push(localizePath(`/posts/page/${n}`, locale))
   const hasNextPage = page < totalPages
   const hasPrevPage = page > 1
@@ -41,7 +45,7 @@ export const Pagination: React.FC<{
           <PaginationItem>
             <PaginationPrevious
               disabled={!hasPrevPage}
-              label={t.pagination.previous}
+              label={labels.previous}
               onClick={() => {
                 goToPage(page - 1)
               }}
@@ -98,7 +102,7 @@ export const Pagination: React.FC<{
           <PaginationItem>
             <PaginationNext
               disabled={!hasNextPage}
-              label={t.pagination.next}
+              label={labels.next}
               onClick={() => {
                 goToPage(page + 1)
               }}

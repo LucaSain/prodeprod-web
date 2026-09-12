@@ -6,6 +6,7 @@ import type { Post } from '@/payload-types'
 import type { Locale } from '@/i18n/config'
 
 import { defaultLocale } from '@/i18n/config'
+import { getTranslate } from '@/i18n/getI18n'
 
 import { Card } from '../../components/Card'
 import { DefaultTypedEditorState } from '@payloadcms/richtext-lexical'
@@ -17,8 +18,9 @@ export type RelatedPostsProps = {
   locale?: Locale
 }
 
-export const RelatedPosts: React.FC<RelatedPostsProps> = (props) => {
+export const RelatedPosts = async (props: RelatedPostsProps) => {
   const { className, docs, introContent, locale = defaultLocale } = props
+  const t = await getTranslate(locale)
 
   return (
     <div className={clsx('lg:container', className)}>
@@ -28,7 +30,14 @@ export const RelatedPosts: React.FC<RelatedPostsProps> = (props) => {
         {docs?.map((doc, index) => {
           if (typeof doc === 'string') return null
 
-          return <Card key={index} doc={doc} locale={locale} relationTo="posts" showCategories />
+          return <Card
+              doc={doc}
+              key={index}
+              locale={locale}
+              noImageLabel={t('prodeprod:common:noImage')}
+              relationTo="posts"
+              showCategories
+            />
         })}
       </div>
     </div>

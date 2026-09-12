@@ -15,7 +15,7 @@ import '../globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
 import { SITE_NAME, defaultKeywords } from '@/utilities/siteConfig'
 import { isLocale, localeHtmlLang, locales, type Locale } from '@/i18n/config'
-import { getDictionary } from '@/i18n/dictionaries'
+import { getTranslate } from '@/i18n/getI18n'
 
 /*
  * Lexend carries the whole site — display and body, separated by weight
@@ -57,7 +57,7 @@ export default async function RootLayout({ children, params }: Args) {
   if (!isLocale(localeParam)) notFound()
 
   const locale = localeParam as Locale
-  const t = getDictionary(locale)
+  const t = await getTranslate(locale)
   const { isEnabled } = await draftMode()
 
   return (
@@ -75,7 +75,7 @@ export default async function RootLayout({ children, params }: Args) {
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
           href="#main"
         >
-          {t.nav.skipToContent}
+          {t('prodeprod:nav:skipToContent')}
         </a>
 
         <AdminBar

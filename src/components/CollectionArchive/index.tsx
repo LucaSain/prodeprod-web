@@ -5,14 +5,17 @@ import type { Locale } from '@/i18n/config'
 
 import { Card, CardPostData } from '@/components/Card'
 import { defaultLocale } from '@/i18n/config'
+import { getTranslate } from '@/i18n/getI18n'
 
 export type Props = {
   posts: CardPostData[]
   locale?: Locale
 }
 
-export const CollectionArchive: React.FC<Props> = (props) => {
+export const CollectionArchive = async (props: Props) => {
   const { posts, locale = defaultLocale } = props
+  const t = await getTranslate(locale)
+  const noImageLabel = t('prodeprod:common:noImage')
 
   return (
     <div className={cn('container')}>
@@ -25,6 +28,7 @@ export const CollectionArchive: React.FC<Props> = (props) => {
                 doc={result}
                 key={index}
                 locale={locale}
+                noImageLabel={noImageLabel}
                 relationTo="posts"
                 showCategories
               />

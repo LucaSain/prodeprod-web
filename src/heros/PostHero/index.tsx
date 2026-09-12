@@ -7,14 +7,17 @@ import type { Locale } from '@/i18n/config'
 import { Media } from '@/components/Media'
 import { formatAuthors } from '@/utilities/formatAuthors'
 import { defaultLocale, localeHtmlLang } from '@/i18n/config'
-import { getDictionary } from '@/i18n/dictionaries'
+import { getTranslate } from '@/i18n/getI18n'
 
-export const PostHero: React.FC<{
+export const PostHero = async ({
+  post,
+  locale = defaultLocale,
+}: {
   post: Post
   locale?: Locale
-}> = ({ post, locale = defaultLocale }) => {
+}) => {
   const { categories, heroImage, populatedAuthors, publishedAt, title } = post
-  const t = getDictionary(locale)
+  const t = await getTranslate(locale)
 
   const hasAuthors =
     populatedAuthors && populatedAuthors.length > 0 && formatAuthors(populatedAuthors) !== ''
@@ -65,13 +68,13 @@ export const PostHero: React.FC<{
           <div className="mt-8 flex flex-col gap-5 text-[0.9375rem] sm:flex-row sm:gap-12">
             {hasAuthors && (
               <div>
-                <div className="text-steel-muted">{t.posts.author}</div>
+                <div className="text-steel-muted">{t('prodeprod:posts:author')}</div>
                 <div className="mt-1">{formatAuthors(populatedAuthors)}</div>
               </div>
             )}
             {publishedAt && (
               <div>
-                <div className="text-steel-muted">{t.posts.datePublished}</div>
+                <div className="text-steel-muted">{t('prodeprod:posts:datePublished')}</div>
                 <time className="mt-1 block" dateTime={publishedAt}>
                   {formatDateTime(publishedAt, localeHtmlLang[locale])}
                 </time>

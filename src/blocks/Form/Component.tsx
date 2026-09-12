@@ -1,6 +1,10 @@
 'use client'
 import type { FormFieldBlock, Form as FormType } from '@payloadcms/plugin-form-builder/types'
 
+import type { Locale } from '@/i18n/config'
+import { defaultLocale } from '@/i18n/config'
+import { getDictionary } from '@/i18n/dictionaries'
+
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
@@ -22,6 +26,7 @@ export type FormBlockType = {
 export const FormBlock: React.FC<
   {
     id?: string
+    locale?: Locale
   } & FormBlockType
 > = (props) => {
   const {
@@ -29,7 +34,10 @@ export const FormBlock: React.FC<
     form: formFromProps,
     form: { id: formID, confirmationMessage, confirmationType, redirect, submitButtonLabel } = {},
     introContent,
+    locale = defaultLocale,
   } = props
+
+  const t = getDictionary(locale)
 
   const formMethods = useForm({
     defaultValues: formFromProps.fields,
@@ -118,16 +126,27 @@ export const FormBlock: React.FC<
       {enableIntro && introContent && !hasSubmitted && (
         <RichText className="mb-8 lg:mb-12" data={introContent} enableGutter={false} />
       )}
-      <div className="p-4 lg:p-6 border border-border rounded-[0.8rem]">
+      <div className="rounded-xl bg-card p-5 lg:p-8">
         <FormProvider {...formMethods}>
           {!isLoading && hasSubmitted && confirmationType === 'message' && (
             <RichText data={confirmationMessage} />
           )}
-          {isLoading && !hasSubmitted && <p>Loading, please wait...</p>}
-          {error && <div>{`${error.status || '500'}: ${error.message || ''}`}</div>}
+          {isLoading && !hasSubmitted && (
+            <p aria-live="polite" className="text-muted-foreground">
+              {t.form.submitting}
+            </p>
+          )}
+          {error && (
+            <div
+              className="mb-6 rounded-md bg-error px-4 py-3 text-sm text-error-foreground"
+              role="alert"
+            >
+              {error.message || t.form.error}
+            </div>
+          )}
           {!hasSubmitted && (
             <form id={formID} onSubmit={handleSubmit(onSubmit)}>
-              <div className="mb-4 last:mb-0">
+              <div className="mb-8 flex flex-col gap-6">
                 {formFromProps &&
                   formFromProps.fields &&
                   formFromProps.fields?.map((field, index) => {
@@ -135,7 +154,7 @@ export const FormBlock: React.FC<
                     const Field: React.FC<any> = fields?.[field.blockType as keyof typeof fields]
                     if (Field) {
                       return (
-                        <div className="mb-6 last:mb-0" key={index}>
+                        <div key={index}>
                           <Field
                             form={formFromProps}
                             {...field}

@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label'
 import React from 'react'
 
 import { Error } from '../Error'
+import { RequiredMark } from '../RequiredMark'
 import { Width } from '../Width'
 
 export const Email: React.FC<
@@ -18,14 +19,11 @@ export const Email: React.FC<
     <Width width={width}>
       <Label htmlFor={name}>
         {label}
-
-        {required && (
-          <span className="required">
-            * <span className="sr-only">(required)</span>
-          </span>
-        )}
+        {required && <RequiredMark />}
       </Label>
       <Input
+        aria-describedby={errors[name] ? `${name}-error` : undefined}
+        aria-invalid={Boolean(errors[name])}
         defaultValue={defaultValue}
         id={name}
         type="text"

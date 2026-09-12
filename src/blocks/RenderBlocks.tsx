@@ -1,12 +1,14 @@
 import React, { Fragment } from 'react'
 
 import type { Page } from '@/payload-types'
+import type { Locale } from '@/i18n/config'
 
 import { ArchiveBlock } from '@/blocks/ArchiveBlock/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { ContentBlock } from '@/blocks/Content/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
+import { MapBlockComponent } from '@/blocks/Map/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -14,12 +16,17 @@ const blockComponents = {
   cta: CallToActionBlock,
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
+  mapBlock: MapBlockComponent,
 }
+
+/** Blocks that render their own chrome in the active language. */
+const localeAwareBlocks = new Set(['mapBlock', 'archive', 'formBlock'])
 
 export const RenderBlocks: React.FC<{
   blocks: Page['layout'][0][]
+  locale?: Locale
 }> = (props) => {
-  const { blocks } = props
+  const { blocks, locale } = props
 
   const hasBlocks = blocks && Array.isArray(blocks) && blocks.length > 0
 
@@ -33,10 +40,12 @@ export const RenderBlocks: React.FC<{
             const Block = blockComponents[blockType]
 
             if (Block) {
+              const localeProps = localeAwareBlocks.has(blockType) ? { locale } : {}
+
               return (
                 <div className="my-16" key={index}>
                   {/* @ts-expect-error there may be some mismatch between the expected types here */}
-                  <Block {...block} disableInnerContainer />
+                  <Block {...block} {...localeProps} disableInnerContainer />
                 </div>
               )
             }

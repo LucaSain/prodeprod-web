@@ -21,23 +21,34 @@ import type {
 import { BannerBlock } from '@/blocks/Banner/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { cn } from '@/utilities/ui'
+import { defaultLocale, localizePath, type Locale } from '@/i18n/config'
 
 type NodeTypes =
   | DefaultNodeTypes
   | SerializedBlockNode<CTABlockProps | MediaBlockProps | BannerBlockProps | CodeBlockProps>
 
-const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
-  const { value, relationTo } = linkNode.fields.doc!
-  if (typeof value !== 'object') {
-    throw new Error('Expected value to be an object')
-  }
-  const slug = value.slug
-  return relationTo === 'posts' ? `/posts/${slug}` : `/${slug}`
-}
+/**
+ * Internal links inside rich text have to carry the locale prefix, or a link
+ * in Russian body copy drops the reader onto the English page.
+ */
+const buildInternalDocToHref =
+  (locale: Locale) =>
+  ({ linkNode }: { linkNode: SerializedLinkNode }) => {
+    const { value, relationTo } = linkNode.fields.doc!
+    if (typeof value !== 'object') {
+      throw new Error('Expected value to be an object')
+    }
+    const slug = value.slug
+    const path = relationTo === 'posts' ? `/posts/${slug}` : `/${slug}`
 
-const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) => ({
+    return localizePath(path, locale)
+  }
+
+const buildJsxConverters =
+  (locale: Locale): JSXConvertersFunction<NodeTypes> =>
+  ({ defaultConverters }) => ({
   ...defaultConverters,
-  ...LinkJSXConverter({ internalDocToHref }),
+  ...LinkJSXConverter({ internalDocToHref: buildInternalDocToHref(locale) }),
   blocks: {
     banner: ({ node }) => <BannerBlock className="col-start-2 mb-4" {...node.fields} />,
     mediaBlock: ({ node }) => (
@@ -59,19 +70,27 @@ type Props = {
   data: DefaultTypedEditorState
   enableGutter?: boolean
   enableProse?: boolean
+  locale?: Locale
 } & React.HTMLAttributes<HTMLDivElement>
 
 export default function RichText(props: Props) {
-  const { className, enableProse = true, enableGutter = true, ...rest } = props
+  const {
+    className,
+    enableProse = true,
+    enableGutter = true,
+    locale = defaultLocale,
+    ...rest
+  } = props
+
   return (
     <ConvertRichText
-      converters={jsxConverters}
+      converters={buildJsxConverters(locale)}
       className={cn(
         'payload-richtext',
         {
           container: enableGutter,
           'max-w-none': !enableGutter,
-          'mx-auto prose md:prose-md dark:prose-invert': enableProse,
+          'mx-auto prose md:prose-md': enableProse,
         },
         className,
       )}

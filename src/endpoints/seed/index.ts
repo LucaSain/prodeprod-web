@@ -17,7 +17,6 @@ const collections: CollectionSlug[] = [
   'posts',
   'forms',
   'form-submissions',
-  'search',
 ]
 
 const globals: GlobalSlug[] = ['header', 'footer']
@@ -48,9 +47,13 @@ export const seed = async ({
     globals.map((global) =>
       payload.updateGlobal({
         slug: global,
+        // The two globals no longer share a field schema — Footer carries
+        // contact details as well — so the union of their data types has no
+        // common shape for TypeScript to accept. Clearing the nav is still
+        // valid for both at runtime.
         data: {
           navItems: [],
-        },
+        } as never,
         depth: 0,
         context: {
           disableRevalidate: true,
@@ -173,6 +176,9 @@ export const seed = async ({
   await payload.update({
     id: post1Doc.id,
     collection: 'posts',
+    context: {
+      disableRevalidate: true,
+    },
     data: {
       relatedPosts: [post2Doc.id, post3Doc.id],
     },
@@ -180,6 +186,9 @@ export const seed = async ({
   await payload.update({
     id: post2Doc.id,
     collection: 'posts',
+    context: {
+      disableRevalidate: true,
+    },
     data: {
       relatedPosts: [post1Doc.id, post3Doc.id],
     },
@@ -187,6 +196,9 @@ export const seed = async ({
   await payload.update({
     id: post3Doc.id,
     collection: 'posts',
+    context: {
+      disableRevalidate: true,
+    },
     data: {
       relatedPosts: [post1Doc.id, post2Doc.id],
     },
@@ -249,27 +261,24 @@ export const seed = async ({
           {
             link: {
               type: 'custom',
-              label: 'Admin',
-              url: '/admin',
+              label: 'News',
+              url: '/posts',
             },
           },
           {
             link: {
               type: 'custom',
-              label: 'Source Code',
-              newTab: true,
-              url: 'https://github.com/payloadcms/payload/tree/3.x/templates/website',
-            },
-          },
-          {
-            link: {
-              type: 'custom',
-              label: 'Payload',
-              newTab: true,
-              url: 'https://payloadcms.com/',
+              label: 'Contact',
+              url: '/contact',
             },
           },
         ],
+        tagline: 'Briquetting presses and complete briquetting lines.',
+        contact: {
+          address: 'Str. Industriei 1\n550001 Sibiu\nRomania',
+          phone: '+40 269 000 000',
+          email: 'office@prodeprod.ro',
+        },
       },
     }),
   ])

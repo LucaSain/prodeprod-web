@@ -1,4 +1,6 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { en } from '@payloadcms/translations/languages/en'
+import { ru } from '@payloadcms/translations/languages/ru'
 import sharp from 'sharp'
 import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
@@ -14,6 +16,7 @@ import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
+import { defaultLocale, localeLabels, locales } from './i18n/config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -63,6 +66,22 @@ export default buildConfig({
     },
   }),
   collections: [Pages, Posts, Media, Categories, Users],
+  // Content localization. Locales come from `src/i18n/config.ts` so the
+  // frontend `[locale]` segment and the CMS can never drift apart.
+  localization: {
+    locales: locales.map((code) => ({
+      code,
+      label: localeLabels[code],
+    })),
+    defaultLocale,
+    // An untranslated field falls back to the default locale rather than
+    // rendering empty, so a half-translated page is still a usable page.
+    fallback: true,
+  },
+  // Russian admin panel for editors working in that locale.
+  i18n: {
+    supportedLanguages: { en, ru },
+  },
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins,

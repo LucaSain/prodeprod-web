@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label'
 import React from 'react'
 
 import { Error } from '../Error'
+import { RequiredMark } from '../RequiredMark'
 import { Width } from '../Width'
 
 export const Checkbox: React.FC<
@@ -21,8 +22,11 @@ export const Checkbox: React.FC<
 
   return (
     <Width width={width}>
-      <div className="flex items-center gap-2">
+      <div className="flex items-start gap-2.5">
         <CheckboxUi
+          aria-describedby={errors[name] ? `${name}-error` : undefined}
+          aria-invalid={Boolean(errors[name])}
+          className="mt-0.5"
           defaultChecked={defaultValue}
           id={name}
           {...props}
@@ -30,13 +34,9 @@ export const Checkbox: React.FC<
             setValue(props.name, checked)
           }}
         />
-        <Label htmlFor={name}>
-          {required && (
-            <span className="required">
-              * <span className="sr-only">(required)</span>
-            </span>
-          )}
+        <Label className="mb-0 leading-normal" htmlFor={name}>
           {label}
+          {required && <RequiredMark />}
         </Label>
       </div>
       {errors[name] && <Error name={name} />}

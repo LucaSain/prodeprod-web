@@ -12,6 +12,9 @@ import { linkGroup } from '@/fields/linkGroup'
 export const hero: Field = {
   name: 'hero',
   type: 'group',
+  // The whole hero is localized so each language gets its own headline,
+  // calls to action and — where the image carries text — its own media.
+  localized: true,
   fields: [
     {
       name: 'type',

@@ -13,6 +13,7 @@ import React from 'react'
 import { Controller } from 'react-hook-form'
 
 import { Error } from '../Error'
+import { RequiredMark } from '../RequiredMark'
 import { Width } from '../Width'
 import { stateOptions } from './options'
 
@@ -26,11 +27,7 @@ export const State: React.FC<
     <Width width={width}>
       <Label htmlFor={name}>
         {label}
-        {required && (
-          <span className="required">
-            * <span className="sr-only">(required)</span>
-          </span>
-        )}
+        {required && <RequiredMark />}
       </Label>
       <Controller
         control={control}
@@ -41,7 +38,12 @@ export const State: React.FC<
 
           return (
             <Select onValueChange={(val) => onChange(val)} value={controlledValue?.value}>
-              <SelectTrigger className="w-full" id={name}>
+              <SelectTrigger
+                aria-describedby={errors[name] ? `${name}-error` : undefined}
+                aria-invalid={Boolean(errors[name])}
+                className="w-full"
+                id={name}
+              >
                 <SelectValue placeholder={label} />
               </SelectTrigger>
               <SelectContent>

@@ -1,20 +1,19 @@
-export const formatDateTime = (timestamp: string): string => {
-  const now = new Date()
-  let date = now
-  if (timestamp) date = new Date(timestamp)
-  const months = date.getMonth()
-  const days = date.getDate()
-  // const hours = date.getHours();
-  // const minutes = date.getMinutes();
-  // const seconds = date.getSeconds();
+/**
+ * Formats a timestamp for display.
+ *
+ * `timeZone: 'UTC'` is deliberate: the server renders in the host's zone and
+ * the browser in the visitor's, so letting it default produces a hydration
+ * mismatch whenever the two disagree about the date.
+ */
+export const formatDateTime = (timestamp: string, locale = 'en'): string => {
+  const date = timestamp ? new Date(timestamp) : new Date()
 
-  const MM = months + 1 < 10 ? `0${months + 1}` : months + 1
-  const DD = days < 10 ? `0${days}` : days
-  const YYYY = date.getFullYear()
-  // const AMPM = hours < 12 ? 'AM' : 'PM';
-  // const HH = hours > 12 ? hours - 12 : hours;
-  // const MinMin = (minutes < 10) ? `0${minutes}` : minutes;
-  // const SS = (seconds < 10) ? `0${seconds}` : seconds;
+  if (Number.isNaN(date.getTime())) return ''
 
-  return `${MM}/${DD}/${YYYY}`
+  return new Intl.DateTimeFormat(locale, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC',
+  }).format(date)
 }

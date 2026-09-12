@@ -12,11 +12,11 @@ export const BannerBlock: React.FC<Props> = ({ className, content, style }) => {
   return (
     <div className={cn('mx-auto my-8 w-full', className)}>
       <div
-        className={cn('border py-3 px-6 flex items-center rounded', {
-          'border-border bg-card': style === 'info',
-          'border-error bg-error/30': style === 'error',
-          'border-success bg-success/30': style === 'success',
-          'border-warning bg-warning/30': style === 'warning',
+        className={cn('flex items-center rounded-lg px-5 py-4', {
+          'bg-card text-card-foreground': style === 'info',
+          'bg-error text-error-foreground': style === 'error',
+          'bg-success text-success-foreground': style === 'success',
+          'bg-warning text-warning-foreground': style === 'warning',
         })}
       >
         <RichText data={content} enableGutter={false} enableProse={false} />

@@ -1,29 +1,36 @@
 import clsx from 'clsx'
 import React from 'react'
 
+import { SITE_NAME } from '@/utilities/siteConfig'
+
 interface Props {
   className?: string
   loading?: 'lazy' | 'eager'
   priority?: 'auto' | 'high' | 'low'
 }
 
-export const Logo = (props: Props) => {
-  const { loading: loadingFromProps, priority: priorityFromProps, className } = props
-
-  const loading = loadingFromProps || 'lazy'
-  const priority = priorityFromProps || 'low'
-
+/**
+ * Wordmark placeholder.
+ *
+ * TODO: replace with the supplied logo. Drop the asset in `public/` and swap
+ * the markup for an <Image>; keep the `className` pass-through so the header
+ * and footer go on controlling size and colour.
+ *
+ * Set in type rather than an image so it inherits `currentColor` — one
+ * component works on the steel surfaces and on the page ground, with no
+ * second file and no `invert` filter.
+ */
+export const Logo = ({ className }: Props) => {
   return (
-    /* eslint-disable @next/next/no-img-element */
-    <img
-      alt="Payload Logo"
-      width={193}
-      height={34}
-      loading={loading}
-      fetchPriority={priority}
-      decoding="async"
-      className={clsx('max-w-[9.375rem] w-full h-[34px]', className)}
-      src="https://raw.githubusercontent.com/payloadcms/payload/3.x/packages/ui/src/assets/payload-logo-light.svg"
-    />
+    <span
+      aria-label={SITE_NAME}
+      className={clsx(
+        'inline-block text-[1.375rem] font-semibold leading-none tracking-[-0.03em]',
+        className,
+      )}
+      role="img"
+    >
+      Prode<span className="text-primary-bright">prod</span>
+    </span>
   )
 }

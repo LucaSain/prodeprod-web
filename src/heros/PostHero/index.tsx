@@ -2,72 +2,84 @@ import { formatDateTime } from 'src/utilities/formatDateTime'
 import React from 'react'
 
 import type { Post } from '@/payload-types'
+import type { Locale } from '@/i18n/config'
 
 import { Media } from '@/components/Media'
 import { formatAuthors } from '@/utilities/formatAuthors'
+import { defaultLocale, localeHtmlLang } from '@/i18n/config'
+import { getDictionary } from '@/i18n/dictionaries'
 
 export const PostHero: React.FC<{
   post: Post
-}> = ({ post }) => {
+  locale?: Locale
+}> = ({ post, locale = defaultLocale }) => {
   const { categories, heroImage, populatedAuthors, publishedAt, title } = post
+  const t = getDictionary(locale)
 
   const hasAuthors =
     populatedAuthors && populatedAuthors.length > 0 && formatAuthors(populatedAuthors) !== ''
 
   return (
-    <div className="relative -mt-[10.4rem] flex items-end">
-      <div className="container z-10 relative lg:grid lg:grid-cols-[1fr_48rem_1fr] text-white pb-8">
-        <div className="col-start-1 col-span-1 md:col-start-2 md:col-span-2">
-          <div className="uppercase text-sm mb-6">
-            {categories?.map((category, index) => {
-              if (typeof category === 'object' && category !== null) {
-                const { title: categoryTitle } = category
+    <section
+      className="relative isolate flex min-h-[26rem] items-end overflow-hidden bg-steel text-steel-foreground md:min-h-[34rem]"
+      data-surface="steel"
+    >
+      {heroImage && typeof heroImage !== 'string' && (
+        <Media fill imgClassName="absolute inset-0 object-cover" priority resource={heroImage} />
+      )}
 
-                const titleToUse = categoryTitle || 'Untitled category'
+      <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-steel via-steel/80 to-steel/25" />
 
-                const isLast = index === categories.length - 1
+      {/* Dissolve into the page ground, matching the main hero. */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-background to-transparent md:h-28"
+      />
 
-                return (
-                  <React.Fragment key={index}>
-                    {titleToUse}
-                    {!isLast && <React.Fragment>, &nbsp;</React.Fragment>}
-                  </React.Fragment>
-                )
-              }
-              return null
-            })}
-          </div>
+      <div className="container relative z-10 pb-28 pt-32 md:pb-40">
+        <div className="max-w-[46rem]">
+          {categories && categories.length > 0 && (
+            <div className="mb-4 text-sm text-primary-bright">
+              {categories.map((category, index) => {
+                if (typeof category === 'object' && category !== null) {
+                  const { title: categoryTitle } = category
 
-          <div className="">
-            <h1 className="mb-6 text-3xl md:text-5xl lg:text-6xl">{title}</h1>
-          </div>
+                  const titleToUse = categoryTitle || 'Untitled category'
 
-          <div className="flex flex-col md:flex-row gap-4 md:gap-16">
+                  const isLast = index === categories.length - 1
+
+                  return (
+                    <React.Fragment key={index}>
+                      {titleToUse}
+                      {!isLast && <React.Fragment>, &nbsp;</React.Fragment>}
+                    </React.Fragment>
+                  )
+                }
+                return null
+              })}
+            </div>
+          )}
+
+          <h1 className="text-4xl font-semibold md:text-6xl">{title}</h1>
+
+          <div className="mt-8 flex flex-col gap-5 text-[0.9375rem] sm:flex-row sm:gap-12">
             {hasAuthors && (
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
-                  <p className="text-sm">Author</p>
-
-                  <p>{formatAuthors(populatedAuthors)}</p>
-                </div>
+              <div>
+                <div className="text-steel-muted">{t.posts.author}</div>
+                <div className="mt-1">{formatAuthors(populatedAuthors)}</div>
               </div>
             )}
             {publishedAt && (
-              <div className="flex flex-col gap-1">
-                <p className="text-sm">Date Published</p>
-
-                <time dateTime={publishedAt}>{formatDateTime(publishedAt)}</time>
+              <div>
+                <div className="text-steel-muted">{t.posts.datePublished}</div>
+                <time className="mt-1 block" dateTime={publishedAt}>
+                  {formatDateTime(publishedAt, localeHtmlLang[locale])}
+                </time>
               </div>
             )}
           </div>
         </div>
       </div>
-      <div className="min-h-[80vh] select-none">
-        {heroImage && typeof heroImage !== 'string' && (
-          <Media fill priority imgClassName="-z-10 object-cover" resource={heroImage} />
-        )}
-        <div className="absolute pointer-events-none left-0 bottom-0 w-full h-1/2 bg-linear-to-t from-black to-transparent" />
-      </div>
-    </div>
+    </section>
   )
 }

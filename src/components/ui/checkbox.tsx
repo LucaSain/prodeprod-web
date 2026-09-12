@@ -12,7 +12,12 @@ const Checkbox: React.FC<React.ComponentProps<typeof CheckboxPrimitive.Root>> = 
   <CheckboxPrimitive.Root
     data-slot="checkbox"
     className={cn(
-      'peer border-input data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground data-[state=checked]:border-primary ring-ring/10 dark:ring-ring/20 dark:outline-ring/40 outline-ring/50 size-4 shrink-0 rounded-[4px] border shadow-xs transition-[color,box-shadow] focus-visible:ring-4 focus-visible:outline-1 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:focus-visible:ring-0',
+      // size-5 rather than size-4: a 16px box is an awkward tap target, and
+      // the label beside it is 15px, so this sits better on the baseline too.
+      'peer size-5 shrink-0 rounded border border-input bg-background transition-colors',
+      'data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground',
+      'hover:border-foreground/40 disabled:cursor-not-allowed disabled:opacity-60',
+      'aria-[invalid=true]:border-destructive',
       className,
     )}
     {...props}
@@ -21,7 +26,7 @@ const Checkbox: React.FC<React.ComponentProps<typeof CheckboxPrimitive.Root>> = 
       data-slot="checkbox-indicator"
       className="flex items-center justify-center text-current"
     >
-      <Check className="size-3.5" />
+      <Check className="size-3.5" strokeWidth={3} />
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
 )

@@ -103,6 +103,9 @@ export const plugins: Plugin[] = [
    * fire.
    */
   payloadPluginCollectionsGlobalsWebhook({
+    // Disabled for now: inert, but the scope below is kept so turning it back
+    // on is a one-line change. Set PAYLOAD_WEBHOOK_URL and drop this flag.
+    disabled: true,
     url: process.env.PAYLOAD_WEBHOOK_URL,
     collections: {
       pages: true,

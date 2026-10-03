@@ -71,6 +71,57 @@ export const customTranslations = {
       },
     },
   },
+  ro: {
+    prodeprod: {
+      nav: {
+        languageSwitcher: 'Schimbă limba',
+        openMenu: 'Deschide meniul',
+        closeMenu: 'Închide meniul',
+        skipToContent: 'Sari la conținut',
+        home: 'Acasă',
+      },
+      common: {
+        goHome: 'Spre pagina principală',
+        readMore: 'Detalii',
+        noImage: 'Fără imagine',
+        loading: 'Se încarcă, vă rugăm așteptați…',
+      },
+      notFound: {
+        code: '404',
+        description: 'Această pagină nu a fost găsită.',
+      },
+      posts: {
+        title: 'Noutăți',
+        relatedTitle: 'Articole similare',
+        author: 'Autor',
+        datePublished: 'Data publicării',
+        noResults: 'Niciun rezultat.',
+        showing: 'Se afișează {{start}} – {{end}} din {{total}}',
+        pageNumber: 'Pagina {{number}}',
+      },
+      pagination: {
+        previous: 'Înapoi',
+        next: 'Înainte',
+        morePages: 'Mai multe pagini',
+        label: 'Paginare',
+      },
+      form: {
+        submitting: 'Se trimite, vă rugăm așteptați…',
+        error: 'Mesajul nu a putut fi trimis. Verificați câmpurile de mai sus și încercați din nou.',
+      },
+      map: {
+        title: 'Unde ne găsiți',
+        directions: 'Vezi traseul',
+        loading: 'Se încarcă harta…',
+      },
+      contact: {
+        address: 'Adresă',
+        phone: 'Telefon',
+        email: 'E-mail',
+        hours: 'Program',
+      },
+    },
+  },
   ru: {
     prodeprod: {
       nav: {

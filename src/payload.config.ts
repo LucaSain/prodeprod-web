@@ -1,5 +1,6 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { en } from '@payloadcms/translations/languages/en'
+import { ro } from '@payloadcms/translations/languages/ro'
 import { ru } from '@payloadcms/translations/languages/ru'
 import sharp from 'sharp'
 import path from 'path'
@@ -98,7 +99,7 @@ export default buildConfig({
    */
   i18n: {
     fallbackLanguage: defaultLocale,
-    supportedLanguages: { en, ru },
+    supportedLanguages: { en, ro, ru },
     translations: customTranslations,
   },
   cors: [getServerSideURL()].filter(Boolean),

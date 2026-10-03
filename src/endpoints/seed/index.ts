@@ -9,6 +9,7 @@ import { imageHero1 } from './image-hero-1'
 import { post1 } from './post-1'
 import { post2 } from './post-2'
 import { post3 } from './post-3'
+import { seedProducts } from './products'
 
 const collections: CollectionSlug[] = [
   'categories',
@@ -227,6 +228,8 @@ export const seed = async ({
     }),
   ])
 
+  await seedProducts({ payload, req, contactPageId: contactPage.id as number })
+
   payload.logger.info(`— Seeding globals...`)
 
   await Promise.all([
@@ -239,6 +242,13 @@ export const seed = async ({
               type: 'custom',
               label: 'Posts',
               url: '/posts',
+            },
+          },
+          {
+            link: {
+              type: 'custom',
+              label: 'Equipment',
+              url: '/equipment',
             },
           },
           {
@@ -258,6 +268,13 @@ export const seed = async ({
       slug: 'footer',
       data: {
         navItems: [
+          {
+            link: {
+              type: 'custom',
+              label: 'Equipment',
+              url: '/equipment',
+            },
+          },
           {
             link: {
               type: 'custom',

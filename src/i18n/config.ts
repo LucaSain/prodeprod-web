@@ -5,7 +5,7 @@
  * `localization.locales` from it, and the frontend `[locale]` segment
  * validates against it. Adding a language means editing this file only.
  */
-export const locales = ['en', 'ru'] as const
+export const locales = ['en', 'ro', 'ru'] as const
 
 export type Locale = (typeof locales)[number]
 
@@ -18,25 +18,29 @@ export const defaultLocale: Locale = 'en'
  * whichever language the editor has the admin panel set to.
  */
 export const localeLabels: Record<Locale, Record<Locale, string>> = {
-  en: { en: 'English', ru: 'Английский' },
-  ru: { en: 'Russian', ru: 'Русский' },
+  en: { en: 'English', ro: 'Engleză', ru: 'Английский' },
+  ro: { en: 'Romanian', ro: 'Română', ru: 'Румынский' },
+  ru: { en: 'Russian', ro: 'Rusă', ru: 'Русский' },
 }
 
 /** Endonyms, for the public language switcher. */
 export const localeEndonyms: Record<Locale, string> = {
   en: 'English',
+  ro: 'Română',
   ru: 'Русский',
 }
 
 /** Short codes for the compact switcher. */
 export const localeShortLabels: Record<Locale, string> = {
   en: 'EN',
+  ro: 'RO',
   ru: 'RU',
 }
 
 /** BCP-47 tags for `<html lang>` and hreflang alternates. */
 export const localeHtmlLang: Record<Locale, string> = {
   en: 'en',
+  ro: 'ro',
   ru: 'ru',
 }
 

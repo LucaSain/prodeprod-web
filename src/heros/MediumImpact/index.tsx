@@ -34,8 +34,9 @@ export const MediumImpactHero: React.FC<Page['hero'] & { locale?: Locale }> = ({
         {media && typeof media === 'object' && (
           <div>
             <Media
-              className="-mx-4 md:-mx-8 2xl:-mx-16"
-              imgClassName=""
+              className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-muted"
+              imgClassName="object-cover"
+              fill
               priority
               resource={media}
             />

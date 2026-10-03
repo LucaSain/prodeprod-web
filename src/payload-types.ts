@@ -110,7 +110,7 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'ru') | ('en' | 'ru')[];
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'ro' | 'ru') | ('en' | 'ro' | 'ru')[];
   globals: {
     header: Header;
     footer: Footer;
@@ -121,7 +121,7 @@ export interface Config {
     footer: FooterSelect<false> | FooterSelect<true>;
     'collection-templates-settings': CollectionTemplatesSettingsSelect<false> | CollectionTemplatesSettingsSelect<true>;
   };
-  locale: 'en' | 'ru';
+  locale: 'en' | 'ro' | 'ru';
   widgets: {
     collections: CollectionsWidget;
   };
@@ -205,7 +205,7 @@ export interface Page {
       | null;
     media?: (number | null) | Media;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | MapBlock)[];
+  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | MapBlock | GalleryBlock)[];
   meta?: {
     title?: string | null;
     /**
@@ -827,6 +827,26 @@ export interface MapBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "GalleryBlock".
+ */
+export interface GalleryBlock {
+  /**
+   * Optional heading shown above the images.
+   */
+  heading?: string | null;
+  images?:
+    | {
+        image: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  featureFirst?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'gallery';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -927,7 +947,8 @@ export interface PagesT {
       | null;
     media?: (number | null) | Media;
   };
-  layout?: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | MapBlock)[] | null;
+  layout?:
+    (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | MapBlock | GalleryBlock)[] | null;
   meta?: {
     title?: string | null;
     /**
@@ -1249,6 +1270,7 @@ export interface PagesSelect<T extends boolean = true> {
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
         mapBlock?: T | MapBlockSelect<T>;
+        gallery?: T | GalleryBlockSelect<T>;
       };
   meta?:
     | T
@@ -1365,6 +1387,22 @@ export interface MapBlockSelect<T extends boolean = true> {
   email?: T;
   hours?: T;
   showDirections?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "GalleryBlock_select".
+ */
+export interface GalleryBlockSelect<T extends boolean = true> {
+  heading?: T;
+  images?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  featureFirst?: T;
   id?: T;
   blockName?: T;
 }
@@ -1740,6 +1778,7 @@ export interface PagesTSelect<T extends boolean = true> {
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
         mapBlock?: T | MapBlockSelect<T>;
+        gallery?: T | GalleryBlockSelect<T>;
       };
   meta?:
     | T

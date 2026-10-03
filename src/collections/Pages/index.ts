@@ -8,6 +8,7 @@ import { Content } from '../../blocks/Content/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { MapBlock } from '../../blocks/Map/config'
+import { GalleryBlock } from '../../blocks/Gallery/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -68,7 +69,7 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock, MapBlock],
+              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock, MapBlock, GalleryBlock],
               required: true,
               // Localized as a whole: a translated page may need a different
               // arrangement of blocks, not just translated text inside them.

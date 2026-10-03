@@ -7,6 +7,7 @@ import { SITE_NAME } from './siteConfig'
 
 const defaultDescriptions: Record<Locale, string> = {
   en: 'Briquetting presses and complete briquetting lines for biomass, wood residues and metal chips.',
+  ro: 'Prese de brichetat și linii complete de brichetare pentru biomasă, deșeuri lemnoase și așchii metalice.',
   ru: 'Брикетировочные прессы и комплектные линии брикетирования для биомассы, древесных отходов и металлической стружки.',
 }
 

@@ -9,6 +9,7 @@ import { ContentBlock } from '@/blocks/Content/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { MapBlockComponent } from '@/blocks/Map/Component'
+import { GalleryBlockComponent } from '@/blocks/Gallery/Component'
 import { defaultLocale } from '@/i18n/config'
 import { getTranslate } from '@/i18n/getI18n'
 
@@ -19,6 +20,7 @@ const blockComponents = {
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
   mapBlock: MapBlockComponent,
+  gallery: GalleryBlockComponent,
 }
 
 /** Blocks that render their own chrome in the active language. */

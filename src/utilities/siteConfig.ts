@@ -26,6 +26,18 @@ export const defaultKeywords: Record<Locale, string[]> = {
     'biomass fuel equipment',
     'industrial briquetting equipment',
   ],
+  ro: [
+    'presă de brichetat',
+    'presă pentru brichete',
+    'echipament de brichetare',
+    'brichetare biomasă',
+    'presă pentru rumeguș',
+    'linie de brichetare',
+    'tocător de crengi',
+    'uscător aerodinamic',
+    'brichete de combustibil',
+    'utilaj industrial Moldova',
+  ],
   ru: [
     'брикетировочный пресс',
     'пресс для брикетирования',

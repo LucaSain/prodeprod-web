@@ -1,7 +1,6 @@
 import { initI18n } from '@payloadcms/translations'
 import type { I18n } from '@payloadcms/translations'
 import configPromise from '@payload-config'
-import { getPayload } from 'payload'
 import { cache } from 'react'
 
 import type { CustomTranslationsKeys } from './translations'
@@ -19,10 +18,12 @@ import { defaultLocale, type Locale } from './config'
  * language, no matter how many components ask for it.
  */
 export const getI18n = cache(async (locale: Locale = defaultLocale): Promise<I18n> => {
-  const payload = await getPayload({ config: configPromise })
+  // The config is read directly rather than through getPayload: translations
+  // are static, and this branch has no database to connect to.
+  const config = await configPromise
 
   return initI18n({
-    config: payload.config.i18n,
+    config: config.i18n,
     context: 'api',
     language: locale,
   })

@@ -42,17 +42,9 @@ const onest = Onest({
   display: 'swap',
 })
 
-/**
- * Rendered on demand rather than prerendered at build.
- *
- * Every page here reads from Payload, so prerendering meant the image build
- * needed a live database — which in turn meant giving CI a route into it. The
- * data is still cached: getCachedGlobal and getCachedDocument wrap their
- * queries in unstable_cache with tags, and the collections' afterChange hooks
- * revalidate those tags on publish, so a request only reaches Postgres once
- * the tag has actually been busted.
- */
-export const dynamic = 'force-dynamic'
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }))
+}
 
 type Args = {
   children: React.ReactNode

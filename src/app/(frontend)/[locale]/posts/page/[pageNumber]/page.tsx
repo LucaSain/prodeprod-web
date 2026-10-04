@@ -3,16 +3,27 @@ import type { Metadata } from 'next/types'
 import { CollectionArchive } from '@/components/CollectionArchive'
 import { PageRange } from '@/components/PageRange'
 import { Pagination } from '@/components/Pagination'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
+import { sdk } from '@/utilities/getPayloadSDK'
 import React from 'react'
 import { notFound } from 'next/navigation'
 
-import { defaultLocale, isLocale, type Locale } from '@/i18n/config'
+import { defaultLocale, isLocale, locales, type Locale } from '@/i18n/config'
 import { getTranslate } from '@/i18n/getI18n'
 import { titleSuffix } from '@/utilities/siteConfig'
 
 export const revalidate = 600
+
+export async function generateStaticParams() {
+  const { totalDocs } = await sdk.count({ collection: 'posts' })
+  const totalPages = Math.ceil(totalDocs / 10)
+
+  const pages: { locale: string; pageNumber: string }[] = []
+  for (const locale of locales) {
+    for (let i = 1; i <= totalPages; i++) pages.push({ locale, pageNumber: String(i) })
+  }
+
+  return pages
+}
 
 type Args = {
   params: Promise<{
@@ -25,18 +36,15 @@ export default async function Page({ params: paramsPromise }: Args) {
   const { pageNumber, locale: localeParam } = await paramsPromise
   const locale = (isLocale(localeParam) ? localeParam : defaultLocale) as Locale
   const t = await getTranslate(locale)
-  const payload = await getPayload({ config: configPromise })
-
   const sanitizedPageNumber = Number(pageNumber)
 
   if (!Number.isInteger(sanitizedPageNumber)) notFound()
 
-  const posts = await payload.find({
+  const posts = await sdk.find({
     collection: 'posts',
     depth: 1,
     limit: 12,
     page: sanitizedPageNumber,
-    overrideAccess: false,
     locale,
   })
 

@@ -1,0 +1,15 @@
+# Cloudflare Pages routing for the static export.
+#
+# On the server branch, src/proxy.ts serves the default locale unprefixed:
+# /about is rewritten to /en/about. A static export has no proxy, so the same
+# shape is reproduced here. 200 means rewrite (the URL stays as typed) rather
+# than redirect.
+#
+# Prefixed locales are listed first so they are never swallowed by the
+# catch-all below.
+/en/*  /en/:splat  200
+/ro/*  /ro/:splat  200
+/ru/*  /ru/:splat  200
+
+/      /en         200
+/*     /en/:splat  200

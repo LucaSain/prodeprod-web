@@ -1,7 +1,8 @@
 import type { Config } from 'src/payload-types'
 
-import configPromise from '@payload-config'
-import { type DataFromGlobalSlug, getPayload } from 'payload'
+import type { DataFromGlobalSlug } from 'payload'
+
+import { sdk } from '@/utilities/getPayloadSDK'
 import { unstable_cache } from 'next/cache'
 
 import { defaultLocale, type Locale } from '@/i18n/config'
@@ -13,15 +14,15 @@ async function getGlobal<T extends Global>(
   depth = 0,
   locale: Locale = defaultLocale,
 ): Promise<DataFromGlobalSlug<T>> {
-  const payload = await getPayload({ config: configPromise })
-
-  const global = await payload.findGlobal({
+  const global = await sdk.findGlobal({
     slug,
     depth,
     locale,
   })
 
-  return global
+  // The SDK types findGlobal more loosely than the Local API does; the shape
+  // on the wire is the same document.
+  return global as DataFromGlobalSlug<T>
 }
 
 /**

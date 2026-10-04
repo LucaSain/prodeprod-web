@@ -1,5 +1,14 @@
-import { PreviewSearchParams } from '@/app/(frontend)/next/preview/route'
 import { PayloadRequest, CollectionSlug } from 'payload'
+
+/**
+ * Declared here rather than imported from the preview route handler: that
+ * route is server-only and is stripped from the static export, so importing
+ * its type would break the build on this branch.
+ */
+type PreviewSearchParams = {
+  path: string
+  previewSecret: string
+}
 
 const collectionPrefixMap: Partial<Record<CollectionSlug, string>> = {
   posts: '/posts',

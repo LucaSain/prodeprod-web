@@ -24,7 +24,7 @@ const blockComponents = {
 }
 
 /** Blocks that render their own chrome in the active language. */
-const localeAwareBlocks = new Set(['mapBlock', 'archive', 'formBlock'])
+const localeAwareBlocks = new Set(['mapBlock', 'archive', 'formBlock', 'cta'])
 
 export const RenderBlocks = async (props: { blocks: Page['layout'][0][]; locale?: Locale }) => {
   const { blocks, locale = defaultLocale } = props

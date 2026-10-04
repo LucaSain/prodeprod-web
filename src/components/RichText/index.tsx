@@ -62,7 +62,7 @@ const buildJsxConverters =
       />
     ),
     code: ({ node }) => <CodeBlock className="col-start-2" {...node.fields} />,
-    cta: ({ node }) => <CallToActionBlock {...node.fields} />,
+    cta: ({ node }) => <CallToActionBlock {...node.fields} locale={locale} />,
   },
 })
 

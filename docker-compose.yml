@@ -1,31 +1,54 @@
-version: '3'
-
+# Deployment stack for Coolify.
+#
+# The app image is built and pushed by .github/workflows/docker.yml. Coolify
+# supplies the variables below; see .env.example for their meaning.
+#
+# Postgres is NOT part of this stack. It runs as its own Coolify service,
+# reachable over the shared destination network, so DATABASE_URL is supplied
+# whole rather than assembled here from user/password/host parts.
+#
+# Required: DATABASE_URL, PAYLOAD_SECRET, NEXT_PUBLIC_SERVER_URL
 services:
-  payload:
-    image: node:18-alpine
+  # Applies Payload migrations, then exits. The app waits for it to finish, so a
+  # fresh database is schema-complete before the server starts. The runtime
+  # image is a traced standalone bundle with no Payload CLI, hence a separate
+  # image built from the `migrator` stage.
+  migrate:
+    image: ${MIGRATOR_IMAGE:-ghcr.io/lucasain/prodeprod-web:main-migrator}
+    # :main moves, so without this a redeploy can restart the cached image and
+    # report success while running the previous build.
+    pull_policy: always
+    restart: 'no'
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?}
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:?}
+
+  app:
+    image: ${APP_IMAGE:-ghcr.io/lucasain/prodeprod-web:main}
+    pull_policy: always
+    restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?}
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:?}
+      NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL}
+      CRON_SECRET: ${CRON_SECRET}
+      PREVIEW_SECRET: ${PREVIEW_SECRET}
+      PAYLOAD_WEBHOOK_URL: ${PAYLOAD_WEBHOOK_URL}
     ports:
       - '3000:3000'
     volumes:
-      - .:/home/node/app
-      - node_modules:/home/node/app/node_modules
-    working_dir: /home/node/app/
-    command: sh -c "yarn install && yarn dev"
-    depends_on:
-      - mongo
-    env_file:
-      - .env
-
-  mongo:
-    image: mongo:latest
-    ports:
-      - '27017:27017'
-    command:
-      - --storageEngine=wiredTiger
-    volumes:
-      - data:/data/db
-    logging:
-      driver: none
+      # Payload writes uploads to public/media; without this they are lost on
+      # every redeploy.
+      - media:/app/public/media
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:3000/ >/dev/null 2>&1 || exit 1']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
 volumes:
-  data:
-  node_modules:
+  media:

@@ -8,7 +8,7 @@ import { getPayload } from 'payload'
 import React from 'react'
 import { notFound } from 'next/navigation'
 
-import { defaultLocale, isLocale, locales, type Locale } from '@/i18n/config'
+import { defaultLocale, isLocale, type Locale } from '@/i18n/config'
 import { getTranslate } from '@/i18n/getI18n'
 import { titleSuffix } from '@/utilities/siteConfig'
 
@@ -84,22 +84,3 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   }
 }
 
-export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-  const { totalDocs } = await payload.count({
-    collection: 'posts',
-    overrideAccess: false,
-  })
-
-  const totalPages = Math.ceil(totalDocs / 10)
-
-  const pages: { locale: string; pageNumber: string }[] = []
-
-  for (const locale of locales) {
-    for (let i = 1; i <= totalPages; i++) {
-      pages.push({ locale, pageNumber: String(i) })
-    }
-  }
-
-  return pages
-}

@@ -13,25 +13,7 @@ import type { Post } from '@/payload-types'
 import { PostHero } from '@/heros/PostHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
-import { defaultLocale, isLocale, locales, type Locale } from '@/i18n/config'
-
-export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-  const posts = await payload.find({
-    collection: 'posts',
-    draft: false,
-    limit: 1000,
-    overrideAccess: false,
-    pagination: false,
-    select: {
-      slug: true,
-    },
-  })
-
-  const slugs = posts.docs.map(({ slug }) => slug as string)
-
-  return locales.flatMap((locale) => slugs.map((slug) => ({ locale, slug })))
-}
+import { defaultLocale, isLocale, type Locale } from '@/i18n/config'
 
 type Args = {
   params: Promise<{

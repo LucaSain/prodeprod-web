@@ -11,27 +11,7 @@ import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
-import { defaultLocale, isLocale, locales, type Locale } from '@/i18n/config'
-
-export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-  const pages = await payload.find({
-    collection: 'pages',
-    draft: false,
-    limit: 1000,
-    overrideAccess: false,
-    pagination: false,
-    select: {
-      slug: true,
-    },
-  })
-
-  const slugs =
-    pages.docs?.filter((doc) => doc.slug !== 'home').map(({ slug }) => slug as string) ?? []
-
-  // Slugs are shared across languages; only the prefix differs.
-  return locales.flatMap((locale) => slugs.map((slug) => ({ locale, slug })))
-}
+import { defaultLocale, isLocale, type Locale } from '@/i18n/config'
 
 type Args = {
   params: Promise<{

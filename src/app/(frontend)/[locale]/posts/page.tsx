@@ -7,16 +7,11 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import React from 'react'
 
-import { defaultLocale, isLocale, locales, type Locale } from '@/i18n/config'
+import { defaultLocale, isLocale, type Locale } from '@/i18n/config'
 import { getTranslate } from '@/i18n/getI18n'
 import { titleSuffix } from '@/utilities/siteConfig'
 
-export const dynamic = 'force-static'
 export const revalidate = 600
-
-export function generateStaticParams() {
-  return locales.map((locale) => ({ locale }))
-}
 
 type Args = {
   params: Promise<{ locale: string }>

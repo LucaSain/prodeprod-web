@@ -37,8 +37,12 @@ services:
       CRON_SECRET: ${CRON_SECRET}
       PREVIEW_SECRET: ${PREVIEW_SECRET}
       PAYLOAD_WEBHOOK_URL: ${PAYLOAD_WEBHOOK_URL}
-    ports:
-      - '3000:3000'
+    # No published ports. Coolify's proxy reaches the container over the
+    # shared network and routes the domain to the port the image EXPOSEs
+    # (3000). Binding a host port here collides with anything else already
+    # on it, which is what "Bind for 0.0.0.0:3000 failed" was.
+    expose:
+      - '3000'
     volumes:
       # Payload writes uploads to public/media; without this they are lost on
       # every redeploy.
